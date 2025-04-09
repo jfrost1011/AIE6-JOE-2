@@ -67,7 +67,77 @@ Looking forward to more AI-driven adventures! 🌟 Feel free to connect if you'd
 #OpenAI #Chainlit #AIPowered #Innovation #TechJourney
 ```
 
+API Key Setup
+Local Development
+Create a .env file in the project directory
+Add your OpenAI API key:
+OPENAI_API_KEY=your_api_key_here
+Deployment
+GitHub: Use repository secrets
+Huggingface: Use Space secrets
+Other platforms: Use their environment variable systems
+Note: Make sure to add .env to your .gitignore file to keep your API key secure.
 
+❓ Question #1:
+The default embedding dimension of text-embedding-3-small is 1536.
+
+Is there any way to modify this dimension?
+Answer:
+Yes, you can modify the dimension of embeddings from text-embedding-3-small. According to the OpenAI API documentation, you can use the dimensions parameter when creating embeddings. This allows you to request lower-dimensional embeddings (from 1 to 1536).
+Answer:
+OpenAI uses a technique called dimensionality reduction to achieve this. When you request a lower dimension, the original 1536-dimensional vector is compressed while attempting to preserve as much semantic information as possible. This is likely done through mathematical techniques like Principal Component Analysis (PCA) or similar methods.
+
+❓ Question #2:
+What are the benefits of using an async approach to collecting our embeddings?
+
+Answer:
+The benefits of using an async approach to collecting embeddings include:
+
+Improved Performance: Async allows the program to continue working on other tasks while waiting for API responses. Since embedding generation requires sending requests to OpenAI's servers and waiting for responses, this can significantly improve throughput.
+Batch Processing Efficiency: The async approach allows multiple embedding requests to be sent concurrently rather than sequentially. With hundreds or thousands of text chunks, this means we don't have to wait for each embedding to complete before starting the next one.
+Resource Utilization: While waiting for network responses, the CPU can work on other tasks, making better use of available resources.
+Scalability: As the corpus size grows, async becomes increasingly important. With sync processing, embedding a large corpus could take hours, while async can reduce this to minutes.
+Responsiveness: In an interactive application, async processing keeps the user interface responsive while the embedding work happens in the background.
+
+The core difference between async and sync approaches is that synchronous code executes sequentially (one operation must complete before the next begins), while asynchronous code allows operations to run concurrently, especially during waiting periods for I/O operations like network requests.
+In this specific case, embedding generation is an I/O-bound task perfect for async processing, as most of the time is spent waiting for the API response rather than doing CPU-intensive work.
+
+❓ Question #3:
+When calling the OpenAI API - are there any ways we can achieve more reproducible outputs?
+
+Answer:
+When calling the OpenAI API, we can achieve more reproducible outputs by adjusting the temperature and seed parameters:
+
+Temperature: Setting the temperature parameter to a lower value (closer to 0) makes outputs more deterministic and focused. At temperature=0, the model will always select the most likely next token, making responses more consistent and reproducible.
+Seed: Using the seed parameter allows for reproducible outputs across different runs. When you set a seed value and keep other parameters the same, you'll get very similar outputs for the same inputs.
+Top_p: Similar to temperature, lowering the top_p value (nucleus sampling) can make outputs more focused and consistent by limiting the tokens the model considers.
+Max_tokens: Setting a consistent max_tokens value ensures the length constraint is the same across runs.
+Presence_penalty and frequency_penalty: Keeping these values consistent helps maintain similar response patterns.
+
+For maximum reproducibility, you would set temperature=0 and provide a specific seed value. However, even with these settings, 100% identical outputs aren't guaranteed due to how these models work, but they will be much more consistent than with default settings.
+
+❓ Question #4:
+What prompting strategies could you use to make the LLM have a more thoughtful, detailed response?
+
+What is that strategy called?
+
+Answer:
+A prompting strategy to make the LLM provide more thoughtful, detailed responses is Chain-of-Thought (CoT) prompting.
+Chain-of-Thought prompting involves explicitly instructing the language model to break down its reasoning process step by step before arriving at a final answer. This approach encourages the model to:
+
+Think through the problem methodically
+Consider different aspects of the question
+Evaluate evidence critically
+Show its reasoning explicitly
+Arrive at more considered conclusions
+
+You could implement this in the RAG system by modifying the system prompt to include instructions like:
+"First, analyze what the question is asking. Then, carefully examine the provided context for relevant information. Break down your thinking step by step, considering different interpretations and evidence. After reasoning through the information, provide a comprehensive answer that addresses all aspects of the query."
+
+Chain-of-Thought prompting has been shown to significantly improve performance on complex reasoning tasks and produce more thoughtful, nuanced responses that better reflect the available information.
+
+Activity #1:
+(Done in the Pythonic_RAG_Assignment.ipynb notebook)
 
 
 
